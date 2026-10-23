@@ -1,0 +1,22 @@
+
+Coordinator-J/
+|
+|-- frontend/
+|   |-- Index.html
+|   |-- Dashboard.html
+|   |-- styles.css
+|   |-- app.js
+|   |
+|   |-- assets/
+|
+|-- backend/
+|   |-- coordinator.py
+|   |-- models.py
+|   |-- tools.py
+|   |-- approvals.py
+|
+|-- main.py
+|-- requirements.txt
+|-- README.md
+|
+|-- desktop_app.py

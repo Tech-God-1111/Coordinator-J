@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#112d4e">
+  <title>Coordinator-J | Welcome</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="Index.html" aria-label="Coordinator-J home">
+      <span class="brand-mark">J</span>
+      <span class="brand-name">Coordinator<span>-J</span></span>
+    </a>
+    <div class="top-right">
+      <span class="status-pill"><span class="dot off"></span>Local preview</span>
+      <button class="round-btn" id="themeToggle" type="button" title="Switch light or dark" aria-label="Switch light or dark">
+        <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="landing">
+      <div>
+        <h1>Think clearly. Coordinate confidently.</h1>
+        <p class="lede">One place to send requests, review tools and follow what happened. Built around the Coordinator-J core you already have.</p>
+        <div class="actions">
+          <a class="cta" href="Dashboard.html">Open the terminal<svg class="i" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <a class="cta ghost" href="#features">See what’s inside</a>
+        </div>
+        <p class="foot-note"><span class="dot"></span>Runs locally. No account needed for this preview.</p>
+      </div>
+
+      <div class="card demo" aria-label="Console preview">
+        <div class="msg bot"><span class="who">Coordinator-J</span><span>Welcome. How can I help?</span></div>
+        <div class="msg user"><span class="who">You</span><span>status</span></div>
+        <div class="msg bot"><span class="who">Coordinator-J</span><span>Core ready. AI planner offline. Two read-only tools registered.</span><span class="meta">Simulated · project_status</span></div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <article class="card feature"><div class="ico"><svg class="i" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg></div><h3>Command console</h3><p>Send a request and read the coordinator’s reply in a simple conversation.</p></article>
+      <article class="card feature"><div class="ico"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg></div><h3>Tool registry</h3><p>Check what is registered before you add anything new.</p></article>
+      <article class="card feature"><div class="ico"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></div><h3>Task history</h3><p>See every request from this session with its result and time.</p></article>
+    </section>
+  </main>
+
+  <footer class="foot"><span>Coordinator-J · Independent agent core</span><span>Interface preview · Backend connection is the next step</span></footer>
+</body>
+</html>
