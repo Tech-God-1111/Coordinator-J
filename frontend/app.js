@@ -1,9 +1,7 @@
 'use strict';
 
 /*
- * Coordinator-J interface preview.
- * This file intentionally does NOT execute real Coordinator-J tools.
- * The Python web backend will be connected in a later milestone.
+ * Coordinator-J web interface connected to the local Python API.
  */
 (() => {
   const $ = (s, r = document) => r.querySelector(s);
@@ -44,25 +42,7 @@
 
   const nowTime = () => new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-  /* ---------- Simulated routing ---------- */
-  const SIM = ' This reply is simulated; the Python coordinator has not been called.';
-  function route(raw) {
-    const n = raw.trim().toLowerCase();
-    if (['status', 'check status', 'project status'].includes(n))
-      return { status: 'Simulated', tool: 'project_status', message: 'The core is shown as running in this preview. AI planner: not connected. SmartDoor: not connected.' + SIM };
-    if (n === 'help')
-      return { status: 'Simulated', tool: 'help', message: 'Try: status, help, tools, history, planner or safety. Natural-language planning is not connected yet.' + SIM };
-    if (n === 'tools')
-      return { status: 'Simulated', tool: 'tool_registry', message: 'Two tools are registered: project_status and help. Both are read only.' + SIM };
-    if (n === 'history')
-      return { status: 'Simulated', tool: 'task_history', message: `This tab has recorded ${history.length} request${history.length === 1 ? '' : 's'}. This is not the Python coordinator’s task history.` };
-    if (n === 'planner')
-      return { status: 'Simulated', tool: 'planner', message: 'The AI planner is offline. Requests are matched by simple rules until it is connected.' + SIM };
-    if (n === 'safety')
-      return { status: 'Simulated', tool: 'approval_gate', message: 'Tools that change state stay behind an approval step. Nothing on this page can trigger one.' + SIM };
-    return { status: 'Not connected', tool: 'none', message: 'No action was taken. The Python backend must be connected before this request can reach Coordinator-J.' };
-  }
-
+  /* ---------- Live API routing ---------- */
   /* ---------- Chat ---------- */
   const thread = $('#thread');
 
@@ -90,7 +70,7 @@
   function welcome() {
     if (!thread) return;
     thread.replaceChildren();
-    addMessage('bot', 'Welcome. This is the interface preview, so replies are simulated. Try Status or Help to see how the console will feel.');
+    addMessage('bot', 'Welcome to Coordinator-J. Commands are sent to the local Python backend. Try Status or Help to begin.');
   }
 
   function cell(text, cls) {
@@ -122,25 +102,54 @@
     if (count) count.textContent = `${history.length} ${history.length === 1 ? 'entry' : 'entries'}`;
   }
 
-  function run(raw) {
+  async function run(raw) {
     const request = raw.trim();
     if (!request) return;
+
     setView('consoleView');
-    const result = route(request);
     const time = nowTime();
-    history.unshift({ request, status: result.status, tool: result.tool, time });
+    const entry = { request, status: 'Running', tool: 'pending', time };
+    history.unshift(entry);
+
     addMessage('user', request);
-    const pending = addMessage('bot', '…');
+    const pending = addMessage('bot', 'Contacting Coordinator-J backend?');
     if (pending) pending.classList.add('typing');
-    setTimeout(() => {
-      if (pending && pending.isConnected) {
-        pending.remove();
-        addMessage('bot', result.message, `${result.status} · ${result.tool} · ${time}`);
-      }
-    }, 450);
-    renderHistory();
+
     const input = $('#commandInput');
     if (input) input.value = '';
+    renderHistory();
+
+    let result;
+    try {
+      const response = await fetch('http://127.0.0.1:8001/api/command', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ request })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || `API request failed (${response.status})`);
+      }
+
+      result = {
+        status: data.status || 'unknown',
+        tool: data.tool || 'none',
+        message: data.message || 'The backend returned no message.'
+      };
+    } catch (error) {
+      result = {
+        status: 'Connection error',
+        tool: 'none',
+        message: `Could not reach the Coordinator-J API. Make sure web_api.py is running at http://127.0.0.1:8001. Details: ${error.message}`
+      };
+    }
+
+    entry.status = result.status;
+    entry.tool = result.tool;
+    if (pending && pending.isConnected) pending.remove();
+    addMessage('bot', result.message, `${result.status} ? ${result.tool} ? ${time}`);
+    renderHistory();
   }
 
   const form = $('#commandForm');

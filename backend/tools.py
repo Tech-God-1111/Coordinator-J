@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+﻿from dataclasses import dataclass
 from typing import Callable
 
 from models import ToolResult
@@ -38,7 +38,7 @@ def register_default_tools(registry: ToolRegistry):
             handler=lambda: ToolResult(
                 True,
                 "Coordinator-J core is running. "
-                "AI planner: not connected. "
+                "AI planner: connected. "
                 "SmartDoor: not connected."
             ),
         )
@@ -52,7 +52,7 @@ def register_default_tools(registry: ToolRegistry):
             handler=lambda: ToolResult(
                 True,
                 "Commands: help, status, tools, history, exit. "
-                "Natural-language AI planning is not connected yet."
+                "Natural-language tool selection is enabled for registered tools."
             ),
         )
     )
